@@ -1,0 +1,63 @@
+package com.example.android_weather_app_rx.viewmodel
+
+import android.view.View
+import com.example.android_weather_app_rx.model.UseCase
+import com.example.android_weather_app_rx.model.WeatherForLocation
+import com.example.android_weather_app_rx.view.MainActivity
+
+class ViewModel(private val view: MainActivity) {
+
+    private lateinit var viewState: ViewState
+    private lateinit var useCase: UseCase
+
+    fun startApplication() {
+        setUpFields()
+        getWeather()
+        useCase.getWeatherForLocation(44418)
+        viewState = viewState.copy(isLoadingDialog = false)
+        invalidateView()
+    }
+
+    private fun getWeather() {
+        viewState.isLoadingDialog = true
+        viewState.viewOfText = View.GONE
+        invalidateView()
+    }
+
+    private fun invalidateView() {
+        view.setNewViewState(viewState)
+    }
+
+    fun onSuccess(weatherForLocation: WeatherForLocation) {
+        viewState.isLoadingDialog = false
+        viewState.didCallFail = false
+        viewState.viewOfText = View.VISIBLE
+        with(weatherForLocation) {
+            with(viewState) {
+                cityTitle = weatherForLocation.cityTitle
+                title = weatherForLocation.parentRegion.title
+                theTemp = useCase.getTemp(weatherForLocation)
+                airPressure =
+                    weatherForLocation.consolidatedWeather[0].airPressure.toString()
+                humidity = weatherForLocation.consolidatedWeather[0].humidity.toString()
+                windSpeed = useCase.getWindSpeed(weatherForLocation)
+            }
+        }
+        invalidateView()
+    }
+
+    fun onFailure(errorMessage: String?) {
+        with(viewState) {
+            isLoadingDialog = false
+            didCallFail = true
+            viewOfText = View.GONE
+            onFailureMessage = errorMessage!!
+        }
+        invalidateView()
+    }
+
+    private fun setUpFields() {
+        viewState = ViewState()
+        useCase = UseCase(this)
+    }
+}
