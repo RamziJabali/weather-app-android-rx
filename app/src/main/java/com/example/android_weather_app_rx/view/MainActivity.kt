@@ -19,10 +19,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity(), ViewListener {
 
-
-    private lateinit var retrofit: Retrofit
-    private lateinit var jsonWeatherAPI: JsonWeatherAPI
-
     private lateinit var loadingDialog: LoadingDialog
 
     private lateinit var viewModel: ViewModel
@@ -63,7 +59,6 @@ class MainActivity : AppCompatActivity(), ViewListener {
 
     private fun setUpFieldMembers() {
         viewModel = ViewModel(this)
-
         loadingDialog = LoadingDialog(this)
 
         cityTextView = findViewById(R.id.city)

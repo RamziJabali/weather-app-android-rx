@@ -15,7 +15,7 @@ class WeatherRepository(val useCase: UseCase) {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                { weatherForLocation -> useCase.onSuccess(weatherForLocation) },                  // onSuccess
-                { error -> useCase.onFailure(error.localizedMessage) })
+                { weatherForLocation -> useCase.onSuccess(weatherForLocation) }, // onSuccess
+                { error -> useCase.onFailure(error.localizedMessage) }) //onError
     }
 }

@@ -7,57 +7,40 @@ import com.example.android_weather_app_rx.view.MainActivity
 
 class ViewModel(private val view: MainActivity) {
 
-    private lateinit var viewState: ViewState
-    private lateinit var useCase: UseCase
-
+    private var viewState = ViewState()
+    private val useCase = UseCase(this)
     fun startApplication() {
-        setUpFields()
-        getWeather()
         useCase.getWeatherForLocation(44418)
-        viewState = viewState.copy(isLoadingDialog = false)
+        viewState = viewState.copy(
+            isLoadingDialog = true,
+            viewOfText = View.GONE
+        )
         invalidateView()
     }
-
-    private fun getWeather() {
-        viewState.isLoadingDialog = true
-        viewState.viewOfText = View.GONE
+    fun onSuccess(weatherForLocation: WeatherForLocation) {
+        viewState = viewState.copy(
+            isLoadingDialog = false,
+            didCallFail = false,
+            viewOfText = View.VISIBLE,
+            cityTitle = weatherForLocation.cityTitle,
+            title = weatherForLocation.parentRegion.title,
+            theTemp = useCase.getTemp(weatherForLocation),
+            airPressure = weatherForLocation.consolidatedWeather[0].airPressure.toString(),
+            humidity = weatherForLocation.consolidatedWeather[0].humidity.toString(),
+            windSpeed = useCase.getWindSpeed(weatherForLocation)
+        )
         invalidateView()
     }
-
+    fun onFailure(errorMessage: String?) {
+        viewState = viewState.copy(
+            isLoadingDialog = false,
+            didCallFail = true,
+            viewOfText = View.GONE,
+            onFailureMessage = errorMessage!!
+        )
+        invalidateView()
+    }
     private fun invalidateView() {
         view.setNewViewState(viewState)
-    }
-
-    fun onSuccess(weatherForLocation: WeatherForLocation) {
-        viewState.isLoadingDialog = false
-        viewState.didCallFail = false
-        viewState.viewOfText = View.VISIBLE
-        with(weatherForLocation) {
-            with(viewState) {
-                cityTitle = weatherForLocation.cityTitle
-                title = weatherForLocation.parentRegion.title
-                theTemp = useCase.getTemp(weatherForLocation)
-                airPressure =
-                    weatherForLocation.consolidatedWeather[0].airPressure.toString()
-                humidity = weatherForLocation.consolidatedWeather[0].humidity.toString()
-                windSpeed = useCase.getWindSpeed(weatherForLocation)
-            }
-        }
-        invalidateView()
-    }
-
-    fun onFailure(errorMessage: String?) {
-        with(viewState) {
-            isLoadingDialog = false
-            didCallFail = true
-            viewOfText = View.GONE
-            onFailureMessage = errorMessage!!
-        }
-        invalidateView()
-    }
-
-    private fun setUpFields() {
-        viewState = ViewState()
-        useCase = UseCase(this)
     }
 }
