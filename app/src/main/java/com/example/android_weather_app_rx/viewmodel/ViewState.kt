@@ -5,25 +5,25 @@ import java.io.SyncFailedException
 
 data class ViewState(
 
-    var isLoadingDialog: Boolean = false,
+    val isLoadingDialog: Boolean = false,
 
-    var didCallFail: Boolean = false,
+    val didCallFail: Boolean = false,
 
-    var title: String = "",
+    val title: String = "",
 
-    var cityTitle: String = "",
+    val cityTitle: String = "",
 
-    var windSpeed: String = "",
+    val windSpeed: String = "",
 
-    var humidity: String = "",
+    val humidity: String = "",
 
-    var airPressure: String = "",
+    val airPressure: String = "",
 
-    var theTemp: String = "",
+    val theTemp: String = "",
 
-    var onFailureMessage: String = "",
+    val onFailureMessage: String = "",
 
-    var failedResponseMessage: String = "",
+    val failedResponseMessage: String = "",
 
-    var viewOfText: Int = View.GONE
+    val viewOfText: Int = View.GONE
 )

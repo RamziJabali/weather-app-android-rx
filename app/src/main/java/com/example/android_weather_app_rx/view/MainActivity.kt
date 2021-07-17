@@ -19,22 +19,46 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity(), ViewListener {
 
-    private lateinit var loadingDialog: LoadingDialog
 
-    private lateinit var viewModel: ViewModel
-
-    private lateinit var windPressureText: TextView
-    private lateinit var cityTextView: TextView
-    private lateinit var stateTextView: TextView
-    private lateinit var temperatureTextView: TextView
-    private lateinit var pressureValueTextView: TextView
-    private lateinit var humidityValueTextView: TextView
-    private lateinit var windSpeedValueTextView: TextView
-
-    private lateinit var humidityTextView: TextView
-    private lateinit var windSpeedTextView: TextView
-    private lateinit var onFailureTextView: TextView
-    private lateinit var weatherImageView: ImageView
+    private val loadingDialog: LoadingDialog by lazy {
+        LoadingDialog(this)
+    }
+    private val viewModel: ViewModel by lazy {
+        ViewModel(this)
+    }
+    private val windPressureText: TextView by lazy {
+        findViewById(R.id.pressureText)
+    }
+    private val cityTextView: TextView by lazy {
+        findViewById(R.id.city)
+    }
+    private val stateTextView: TextView by lazy {
+        findViewById(R.id.state)
+    }
+    private val temperatureTextView: TextView by lazy {
+        findViewById(R.id.temperature)
+    }
+    private val pressureValueTextView: TextView by lazy {
+        findViewById(R.id.pressureValueText)
+    }
+    private val humidityValueTextView: TextView by lazy {
+        findViewById(R.id.humidityValueText)
+    }
+    private val windSpeedValueTextView: TextView by lazy {
+        findViewById(R.id.windSpeedValueText)
+    }
+    private val humidityTextView: TextView by lazy {
+        findViewById(R.id.humidityText)
+    }
+    private val windSpeedTextView: TextView by lazy {
+        findViewById(R.id.windSpeedText)
+    }
+    private val onFailureTextView: TextView by lazy {
+        findViewById(R.id.onFailureText)
+    }
+    private val weatherImageView: ImageView by lazy {
+        findViewById(R.id.weatherImage)
+    }
 
 
     companion object {
@@ -44,7 +68,8 @@ class MainActivity : AppCompatActivity(), ViewListener {
 
     override fun setNewViewState(viewState: ViewState) {
         if (viewState.isLoadingDialog) loadingDialog.show() else loadingDialog.hide()
-        if (viewState.didCallFail) onFailureTextView.visibility = View.VISIBLE else onFailureTextView.visibility = View.GONE
+        if (viewState.didCallFail) onFailureTextView.visibility =
+            View.VISIBLE else onFailureTextView.visibility = View.GONE
         setTextAndImageViewVisibility(viewState.viewOfText)
         populateViewsWithText(viewState)
         return
@@ -53,25 +78,7 @@ class MainActivity : AppCompatActivity(), ViewListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setUpFieldMembers()
         viewModel.startApplication()
-    }
-
-    private fun setUpFieldMembers() {
-        viewModel = ViewModel(this)
-        loadingDialog = LoadingDialog(this)
-
-        cityTextView = findViewById(R.id.city)
-        stateTextView = findViewById(R.id.state)
-        temperatureTextView = findViewById(R.id.temperature)
-        pressureValueTextView = findViewById(R.id.pressureValueText)
-        humidityValueTextView = findViewById(R.id.humidityValueText)
-        windSpeedValueTextView = findViewById(R.id.windSpeedValueText)
-        windPressureText = findViewById(R.id.pressureText)
-        humidityTextView = findViewById(R.id.humidityText)
-        windSpeedTextView = findViewById(R.id.windSpeedText)
-        onFailureTextView = findViewById(R.id.onFailureText)
-        weatherImageView = findViewById(R.id.weatherImage)
     }
 
     private fun setTextAndImageViewVisibility(viewOfText: Int) {
