@@ -1,14 +1,17 @@
 package com.example.android_weather_app_rx.viewmodel
 
 import android.view.View
+import androidx.annotation.VisibleForTesting
 import com.example.android_weather_app_rx.model.UseCase
 import com.example.android_weather_app_rx.model.WeatherForLocation
 import com.example.android_weather_app_rx.view.MainActivity
 
 class ViewModel(private val view: MainActivity) {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    var viewState = ViewState()
 
-    private var viewState = ViewState()
     private val useCase = UseCase(this)
+
     fun startApplication() {
         useCase.getWeatherForLocation(44418)
         viewState = viewState.copy(
@@ -17,6 +20,7 @@ class ViewModel(private val view: MainActivity) {
         )
         invalidateView()
     }
+
     fun onSuccess(weatherForLocation: WeatherForLocation) {
         viewState = viewState.copy(
             isLoadingDialog = false,
@@ -31,6 +35,7 @@ class ViewModel(private val view: MainActivity) {
         )
         invalidateView()
     }
+
     fun onFailure(errorMessage: String?) {
         viewState = viewState.copy(
             isLoadingDialog = false,
@@ -40,6 +45,7 @@ class ViewModel(private val view: MainActivity) {
         )
         invalidateView()
     }
+
     private fun invalidateView() {
         view.setNewViewState(viewState)
     }

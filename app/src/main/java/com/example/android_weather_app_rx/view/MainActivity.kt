@@ -5,47 +5,48 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.VisibleForTesting
 import com.example.android_weather_app_rx.R
 import com.example.android_weather_app_rx.viewmodel.ViewState
-import com.example.android_weather_app_rx.viewmodel.JsonWeatherAPI
-import com.example.android_weather_app_rx.viewmodel.RetrofitBuilder
 import com.example.android_weather_app_rx.viewmodel.ViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 
 
 class MainActivity : AppCompatActivity(), ViewListener {
 
-
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    val viewModel: ViewModel by lazy {
+        ViewModel(this)
+    }
     private val loadingDialog: LoadingDialog by lazy {
         LoadingDialog(this)
     }
-    private val viewModel: ViewModel by lazy {
-        ViewModel(this)
-    }
-    private val windPressureText: TextView by lazy {
-        findViewById(R.id.pressureText)
-    }
-    private val cityTextView: TextView by lazy {
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    val cityTextView: TextView by lazy {
         findViewById(R.id.city)
     }
-    private val stateTextView: TextView by lazy {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    val stateTextView: TextView by lazy {
         findViewById(R.id.state)
     }
-    private val temperatureTextView: TextView by lazy {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    val temperatureTextView: TextView by lazy {
         findViewById(R.id.temperature)
     }
-    private val pressureValueTextView: TextView by lazy {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    val pressureValueTextView: TextView by lazy {
         findViewById(R.id.pressureValueText)
     }
-    private val humidityValueTextView: TextView by lazy {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    val humidityValueTextView: TextView by lazy {
         findViewById(R.id.humidityValueText)
     }
-    private val windSpeedValueTextView: TextView by lazy {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    val windSpeedValueTextView: TextView by lazy {
         findViewById(R.id.windSpeedValueText)
+    }
+    private val windPressureTextView: TextView by lazy {
+        findViewById(R.id.pressureText)
     }
     private val humidityTextView: TextView by lazy {
         findViewById(R.id.humidityText)
@@ -56,7 +57,8 @@ class MainActivity : AppCompatActivity(), ViewListener {
     private val onFailureTextView: TextView by lazy {
         findViewById(R.id.onFailureText)
     }
-    private val weatherImageView: ImageView by lazy {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    val weatherImageView: ImageView by lazy {
         findViewById(R.id.weatherImage)
     }
 
@@ -88,7 +90,7 @@ class MainActivity : AppCompatActivity(), ViewListener {
         pressureValueTextView.visibility = viewOfText
         humidityValueTextView.visibility = viewOfText
         windSpeedValueTextView.visibility = viewOfText
-        windPressureText.visibility = viewOfText
+        windPressureTextView.visibility = viewOfText
         humidityTextView.visibility = viewOfText
         windSpeedTextView.visibility = viewOfText
         weatherImageView.visibility = viewOfText
