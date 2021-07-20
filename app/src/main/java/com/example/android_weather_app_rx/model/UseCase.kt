@@ -1,6 +1,8 @@
 package com.example.android_weather_app_rx.model
 
+import com.example.android_weather_app_rx.viewmodel.JsonWeatherAPI
 import com.example.android_weather_app_rx.viewmodel.ViewModel
+import org.koin.core.context.GlobalContext.get
 
 class UseCase(val viewModel: ViewModel) {
     fun getWeatherForLocation(WOEID: Int){

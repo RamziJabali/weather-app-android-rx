@@ -1,16 +1,20 @@
 package com.example.android_weather_app_rx.model
 
+import android.annotation.SuppressLint
 import com.example.android_weather_app_rx.viewmodel.JsonWeatherAPI
-import com.example.android_weather_app_rx.viewmodel.RetrofitBuilder
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import org.koin.core.KoinApplication
+import org.koin.core.KoinComponent
+import org.koin.core.get
+import retrofit2.Retrofit
 
-class WeatherRepository(val useCase: UseCase) {
+class WeatherRepository(private val useCase: UseCase):KoinComponent {
 
+    @SuppressLint("CheckResult")
     fun getWeatherForLocation(WOEID: Int){
-        val retrofit = RetrofitBuilder().getInstance()
-        val jsonWeatherApi = retrofit.create(JsonWeatherAPI::class.java)
-        jsonWeatherApi.getWeatherForWhereOnEarthId(WOEID)
+
+        get<JsonWeatherAPI>().getWeatherForWhereOnEarthId(WOEID)
             .toObservable()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
