@@ -1,7 +1,7 @@
 package com.example.android_weather_app_rx.koin
 
 
-import com.example.android_weather_app_rx.viewmodel.JsonWeatherAPI
+import com.example.android_weather_app_rx.network.JsonWeatherAPI
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import org.koin.dsl.module

@@ -1,13 +1,13 @@
-package com.example.android_weather_app_rx.model
+package com.example.android_weather_app_rx.network
 
 import com.google.gson.annotations.SerializedName
 
-data class Location(
+data class Region(
     @SerializedName("title")
-    val cityTitle: String,
+    val title: String,
 
     @SerializedName("location_type")
-    val location_type: String,
+    val locationType: String,
 
     @SerializedName("woeid")
     val whereOnEarthId: Int,

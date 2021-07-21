@@ -1,7 +1,7 @@
-package com.example.android_weather_app_rx.model
+package com.example.android_weather_app_rx.network
 
-import com.example.android_weather_app_rx.model.ConsolidatedWeather
-import com.example.android_weather_app_rx.model.Region
+import com.example.android_weather_app_rx.network.ConsolidatedWeather
+import com.example.android_weather_app_rx.network.Region
 import com.google.gson.annotations.SerializedName
 
 data class WeatherForLocation(

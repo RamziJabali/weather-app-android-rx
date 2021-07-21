@@ -2,41 +2,62 @@ package com.example.android_weather_app_rx.viewmodel
 
 import android.view.View
 import androidx.annotation.VisibleForTesting
-import com.example.android_weather_app_rx.model.UseCase
-import com.example.android_weather_app_rx.model.WeatherForLocation
+import androidx.lifecycle.ViewModel
+import com.example.android_weather_app_rx.network.WeatherForLocation
+import com.example.android_weather_app_rx.model.WeatherRepository
 import com.example.android_weather_app_rx.view.MainActivity
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 
-class ViewModel(private val view: MainActivity) {
+class ViewModel(private val weatherRepository: WeatherRepository): ViewModel() {
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     var viewState = ViewState()
 
-    private val useCase = UseCase(this)
+    private lateinit var view: MainActivity
+    private val disposable = CompositeDisposable()
 
     fun startApplication() {
-        useCase.getWeatherForLocation(44418)
+        disposable.add(weatherRepository.getWeatherForLocation(44418)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { weatherForLocation -> onSuccess(weatherForLocation) },
+                { error -> onFailure(error.localizedMessage) }))
+
         viewState = viewState.copy(
             isLoadingDialog = true,
             viewOfText = View.GONE
         )
+
         invalidateView()
     }
 
-    fun onSuccess(weatherForLocation: WeatherForLocation) {
+    fun setMainActivity(mainActivity: MainActivity) {
+        view = mainActivity
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        disposable.clear()
+    }
+
+    private fun onSuccess(weatherForLocation: WeatherForLocation) {
         viewState = viewState.copy(
             isLoadingDialog = false,
             didCallFail = false,
             viewOfText = View.VISIBLE,
             cityTitle = weatherForLocation.cityTitle,
             title = weatherForLocation.parentRegion.title,
-            theTemp = useCase.getTemp(weatherForLocation),
+            theTemp = getTemp(weatherForLocation),
             airPressure = weatherForLocation.consolidatedWeather[0].airPressure.toString(),
             humidity = weatherForLocation.consolidatedWeather[0].humidity.toString(),
-            windSpeed = useCase.getWindSpeed(weatherForLocation)
+            windSpeed = getWindSpeed(weatherForLocation)
         )
         invalidateView()
     }
 
-    fun onFailure(errorMessage: String?) {
+    private fun onFailure(errorMessage: String?) {
         viewState = viewState.copy(
             isLoadingDialog = false,
             didCallFail = true,
@@ -48,5 +69,15 @@ class ViewModel(private val view: MainActivity) {
 
     private fun invalidateView() {
         view.setNewViewState(viewState)
+    }
+
+    private fun getTemp(weatherForLocation: WeatherForLocation): String {
+        val weatherInt = (weatherForLocation.consolidatedWeather[0].theTemp * 100).toInt()
+        return ((weatherInt).toDouble() / 100).toString() + " F"
+    }
+
+    private fun getWindSpeed(weatherForLocation: WeatherForLocation): String {
+        val weatherInt = (weatherForLocation.consolidatedWeather[0].windSpeed * 100).toInt()
+        return ((weatherInt).toDouble() / 100).toString()
     }
 }

@@ -1,4 +1,4 @@
-package com.example.android_weather_app_rx.model
+package com.example.android_weather_app_rx.network
 
 import com.google.gson.annotations.SerializedName
 
