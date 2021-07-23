@@ -1,7 +1,8 @@
 package com.example.android_weather_app_rx.viewmodel
 
 import android.view.View
-import java.io.SyncFailedException
+import androidx.lifecycle.MutableLiveData
+import com.example.android_weather_app_rx.view.MainActivity
 
 data class ViewState(
 
