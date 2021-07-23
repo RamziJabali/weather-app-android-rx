@@ -9,7 +9,6 @@ import io.reactivex.schedulers.Schedulers
 
 class WeatherRepository(private val jsonWeatherApi: JsonWeatherAPI) {
 
-    @SuppressLint("CheckResult")
     fun getWeatherForLocation(woeid: Int): Observable<WeatherForLocation> =
         jsonWeatherApi.getWeatherForWhereOnEarthId(woeid)
 }
